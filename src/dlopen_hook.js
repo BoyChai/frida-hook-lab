@@ -18,20 +18,6 @@ function hook_dlopen() {
     },
   });
 }
-function hook_pthread_create() {
-  Interceptor.attach(Module.findExportByName(null, "pthread_create"), {
-    onEnter: function (args) {
-      var module = Process.findModuleByAddress(ptr(this.returnAddress));
-      //this.returnAddress返回当前函数的地址，也就是谁调用的这个函数
-
-      if (module != null) {
-        console.log("[pthread_create] called from", module.name);
-      } else {
-        console.log("[pthread_create] called from", ptr(this.returnAddress));
-      }
-    },
-  });
-}
 setImmediate(() => {
   Java.perform(function () {
     hook_dlopen();
